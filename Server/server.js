@@ -18,12 +18,12 @@ app.get('/movies', (req, res) =>{
 });
 
 app.get('/movies/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const movie = movies.find(movie => movie.id);
+    const id = (req.params.id);
+    const movie = movies.find(movie => movie.id === id);
     if (movie) {
         res.json(movie);
     } else {
-        res.status(404).send('Movie not found');
+        res.status(404).send(`Movie not found, the id ${id} not exist`);
     }
 });
 
@@ -35,7 +35,19 @@ app.post('/movies', (req, res) => {
     movie.id = uuidv4();
     movies.push(movie);
     res.json(movie);
-})
+});
+
+app.delete('/movies/:id', (req, res) => {
+    const id = (req.params.id);
+    const movie = movies.findIndex(movie => movie.id === id);
+    if(movie !== -1){
+        movies.splice(movie, 1);
+        res.send(`Se borró la pelicula con el id: ${id}`);
+    } else {
+        res.status(404).send(`No se ha encontrado la pelicula con el id: ${id}`)
+    }
+    
+});
 
 const PORT = 3001;
 app.listen(PORT, ()=>{
