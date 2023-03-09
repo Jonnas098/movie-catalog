@@ -13,10 +13,12 @@ let movies = [
     { id: uuidv4(), title: 'The Dark Knight', year: 2008, director: 'Christopher Nolan', genre: 'Action, Crime, Drama' },
 ];
 
+//Get all movies
 app.get('/movies', (req, res) =>{
     res.json(movies);
 });
 
+//Get movie by id
 app.get('/movies/:id', (req, res) => {
     const id = (req.params.id);
     const movie = movies.find(movie => movie.id === id);
@@ -27,6 +29,7 @@ app.get('/movies/:id', (req, res) => {
     }
 });
 
+//Create a new movie with all params
 app.post('/movies', (req, res) => {
     const movie = req.body;
     if(!movie.title || !movie.director || !movie.genre || !movie.year){
@@ -37,6 +40,21 @@ app.post('/movies', (req, res) => {
     res.json(movie);
 });
 
+//Edit title and director of a movie
+app.put('/movies/:id', (req, res) => {
+    const id = (req.params.id);
+    const {title, director} = req.body;
+    const movie = movies.find(movie => movie.id === id);
+    if (!movie){
+        res.status(404).send('This id not exist');
+    }
+     movie.title = title;
+     movie.director = director;
+     res.json(movie);
+});
+
+
+//Delete movie by id
 app.delete('/movies/:id', (req, res) => {
     const id = (req.params.id);
     const movie = movies.findIndex(movie => movie.id === id);
